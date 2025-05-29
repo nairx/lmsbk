@@ -116,7 +116,7 @@ router.get("/batch/:id", authenticate, authorize('admin'), async (req, res) => {
   }
 });
 
-router.post("/", authenticate, authorize('admin'), async (req, res) => {
+router.post("/", async (req, res) => {
   const body = await req.body;
 
   try {
