@@ -83,7 +83,7 @@ router.post("/login", async (req, res) => {
       level: found.level,
       batch: found.batch,
       token: token,
-      message: "ok",
+      // message: "ok",
     };
     return res.json(data);
   } catch (err) {
