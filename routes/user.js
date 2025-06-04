@@ -55,14 +55,14 @@ router.post("/login", async (req, res) => {
       email: body.email,
     });
     if (!found) {
-      return res.json({ message: "User not found" });
+      return res.json({ msg: "User not found" });
     }
     if (!found.active) {
-      return res.json({ message: "Activation Pending" });
+      return res.json({ msg: "Activation Pending" });
     }
     const matchPassword = await bcrypt.compare(body.pass, found.pass);
     if (!matchPassword) {
-      return res.json({ message: "Invalid Password" });
+      return res.json({ msg: "Invalid Password" });
     }
     const token = jwt.sign(
       {
@@ -83,13 +83,13 @@ router.post("/login", async (req, res) => {
       level: found.level,
       batch: found.batch,
       token: token,
-      // message: "ok",
+      msg: "ok",
     };
     return res.json(data);
   } catch (err) {
     return res.json(
       { error: err.message },
-      { message: "Something went wrong" }
+      { msg: "Something went wrong" }
     );
   }
 });
