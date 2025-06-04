@@ -55,14 +55,14 @@ router.post("/login", async (req, res) => {
       email: body.email,
     });
     if (!found) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(204).json({ message: "User not found" });
     }
     if (!found.active) {
-      return res.status(400).json({ message: "Activation Pending" });
+      return res.status(204).json({ message: "Activation Pending" });
     }
     const matchPassword = await bcrypt.compare(body.pass, found.pass);
     if (!matchPassword) {
-      return res.status(400).json({ message: "Invalid Password" });
+      return res.status(204).json({ message: "Invalid Password" });
     }
     const token = jwt.sign(
       {
