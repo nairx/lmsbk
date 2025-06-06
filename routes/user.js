@@ -57,6 +57,7 @@ router.post("/login", async (req, res) => {
     if (!found) {
       return res.json({ message: "User not found" });
     }
+    //testing
     if (!found.active) {
       return res.json({ message: "Activation Pending" });
     }

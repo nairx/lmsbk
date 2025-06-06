@@ -17,6 +17,7 @@ const userSchema = mongoose.Schema(
     score: { type: Number, default: 0 },
     lastGraded: { type: Date },
     level: { type: Number, default: 1 },
+    visibility: { type: String, default:"private" },
   },
   { timestamps: true }
 );
