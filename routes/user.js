@@ -95,7 +95,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/batch/:id", authenticate, authorize('admin'), async (req, res) => {
+router.get("/batch/:id", authenticate,  async (req, res) => {
   try {
     // const batchId = req.params.id;
     // let filterObj;
