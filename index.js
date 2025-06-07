@@ -8,8 +8,8 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
+await dbConnect()
 
-dbConnect()
 // mongoose
 //   .connect(process.env.MONGO_URI)
 //   .then(() => console.log("MongoDB connected"))
