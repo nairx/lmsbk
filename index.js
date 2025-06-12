@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.js";
-import mcqRoutes from "./routes/mcq.js";
+// import mcqRoutes from "./routes/mcq.js";
 import dbConnect from "./lib/mongoose.js";
 dotenv.config();
 const app = express();
