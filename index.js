@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 5000;
 // });
 
 app.use("/api/users", userRoutes);
-app.use("/api/mcqs", mcqRoutes);
+// app.use("/api/mcqs", mcqRoutes);
 
 // app.use("/api/courses", courseRoutes);
 
