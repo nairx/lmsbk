@@ -10,12 +10,19 @@ import { authenticate, authorize } from "../middleware/auth.js";
 const router = express.Router();
 
 dotenv.config();
+//authenticate, authorize("admin"),
 const SECRET_KEY = process.env.JWT_SECRET;
-router.get("/", authenticate, authorize('admin'), async (req, res) => {
+router.get("/", authenticate, authorize("admin"), async (req, res) => {
   const users = await userModel
     .find({ role: { $not: { $eq: "user" } } })
     .sort({ updatedAt: -1 });
   return res.json(users);
+});
+
+router.delete("/:id",authenticate, authorize("admin"), async (req, res) => {
+  const id = req.params.id;
+  const user = await userModel.findByIdAndDelete(id);
+  return res.json(user);
 });
 
 router.post("/register", async (req, res) => {
@@ -88,14 +95,13 @@ router.post("/login", async (req, res) => {
     };
     return res.json(data);
   } catch (err) {
-    return res.status(400).json(
-      { error: err.message },
-      { message: "Something went wrong" }
-    );
+    return res
+      .status(400)
+      .json({ error: err.message }, { message: "Something went wrong" });
   }
 });
 
-router.get("/batch/:id", authenticate,  async (req, res) => {
+router.get("/batch/:id", authenticate, async (req, res) => {
   try {
     // const batchId = req.params.id;
     // let filterObj;
@@ -162,42 +168,47 @@ router.patch("/:id", authenticate, async (req, res) => {
   return res.json(users);
 });
 
-router.patch("/grade/:id", authenticate, authorize('admin'), async (req, res) => {
-  console.log("inside grade block")
-  const chkUser = await userModel.aggregate([
-    {
-      $project: {
-        _id: 1,
-        name: 1,
-        lastGraded: 1,
-        updatedAt: 1,
-        daysBetween: {
-          $dateDiff: {
-            startDate: "$lastGraded",
-            endDate: "$$NOW",
-            unit: "minute",
+router.patch(
+  "/grade/:id",
+  authenticate,
+  authorize("admin"),
+  async (req, res) => {
+    console.log("inside grade block");
+    const chkUser = await userModel.aggregate([
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          lastGraded: 1,
+          updatedAt: 1,
+          daysBetween: {
+            $dateDiff: {
+              startDate: "$lastGraded",
+              endDate: "$$NOW",
+              unit: "minute",
+            },
           },
         },
       },
-    },
-    // { $match: { daysBetween: { $gte: 1 }, _id: id } },
-    {
-      $match: {
-        daysBetween: { $lte: 14 },
-        _id: new mongoose.Types.ObjectId(req.params.id),
+      // { $match: { daysBetween: { $gte: 1 }, _id: id } },
+      {
+        $match: {
+          daysBetween: { $lte: 14 },
+          _id: new mongoose.Types.ObjectId(req.params.id),
+        },
       },
-    },
-  ]);
-  // console.log("chkuser", chkUser);
-  if (chkUser.length > 0) return res.json({ message: "Already Graded" });
-  const student = await userModel.updateOne(
-    { _id: req.params.id },
-    {
-      $inc: { score: 1 },
-      $set: { lastGraded: new Date(), message: "Reviewed" },
-    }
-  );
-  return res.json(student);
-});
+    ]);
+    // console.log("chkuser", chkUser);
+    if (chkUser.length > 0) return res.json({ message: "Already Graded" });
+    const student = await userModel.updateOne(
+      { _id: req.params.id },
+      {
+        $inc: { score: 1 },
+        $set: { lastGraded: new Date(), message: "Reviewed" },
+      }
+    );
+    return res.json(student);
+  }
+);
 
 export default router;
