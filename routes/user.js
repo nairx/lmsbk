@@ -14,7 +14,8 @@ dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET;
 router.get("/", authenticate, authorize("admin"), async (req, res) => {
   const users = await userModel
-    .find({ role: { $not: { $eq: "user" } } })
+    // .find({ role: { $not: { $eq: "user" } } })
+    .find({})
     .sort({ updatedAt: -1 });
   return res.json(users);
 });
