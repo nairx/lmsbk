@@ -28,7 +28,7 @@ router.delete("/:id",authenticate, authorize("admin"), async (req, res) => {
 
 router.post("/register", async (req, res) => {
   // const body = req.body;
-  const { name, email, pass } = req.body;
+  const { name, email, pass,batch } = req.body;
   try {
     const found = await userModel.findOne({ email });
     if (found) {
